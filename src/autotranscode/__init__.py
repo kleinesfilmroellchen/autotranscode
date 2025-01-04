@@ -18,6 +18,8 @@ from watchdog.observers import Observer
 
 from .ffmpeg import FFmpegHandler
 
+from concurrent.futures import ThreadPoolExecutor
+
 
 def thread_event_loop() -> asyncio.EventLoop:
     try:
@@ -30,9 +32,16 @@ class TranscoderHandler(FileSystemEventHandler):
     def __init__(self, ffmpeg_handler: FFmpegHandler):
         super().__init__()
         self.ffmpeg_handler = ffmpeg_handler
+        self.executor = ThreadPoolExecutor(
+            max_workers=2, thread_name_prefix="transcode_worker_"
+        )
 
-    def on_any_event(self, event: FileSystemEvent) -> None:
-        print(event)
+    def run_initial_scan(self, dir: Path):
+        for file in dir.glob("**/*"):
+            if file.is_file():
+                output = self.ffmpeg_handler.associated_output_name(file)
+                if not output.exists():
+                    self.try_transcode(file)
 
     def on_moved(self, event):
         # move output files with their inputs
@@ -60,13 +69,20 @@ class TranscoderHandler(FileSystemEventHandler):
             return
         print(f"New file {input} was created, trying to transcode...")
         try:
-            thread_event_loop().run_until_complete(self.ffmpeg_handler.transcode(input))
+            self.executor.submit(
+                lambda: thread_event_loop().run_until_complete(
+                    self.ffmpeg_handler.transcode(input)
+                )
+            )
         except Exception as e:
             print(f"Error while running transcode: {e}")
 
 
 def handle_transcoding(path: Path, ffmpeg_handler: FFmpegHandler):
     event_handler = TranscoderHandler(ffmpeg_handler)
+
+    event_handler.run_initial_scan(path)
+
     observer = Observer()
     observer.schedule(
         event_handler,
