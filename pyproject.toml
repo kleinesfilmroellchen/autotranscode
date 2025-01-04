@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autotranscode"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "kleines Filmröllchen", email = "kleines@filmroellchen.eu" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["python-ffmpeg>=2", "watchdog>=6", "click"]
+
+[project.scripts]
+autotranscode = "autotranscode.cli:autotranscode"
+
+[tool.hatch.version]
+path = "src/autotranscode/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = ["mypy>=1.0.0"]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/autotranscode tests}"
+
+[tool.coverage.run]
+source_pkgs = ["autotranscode", "tests"]
+branch = true
+parallel = true
+omit = ["src/autotranscode/__about__.py"]
+
+[tool.coverage.paths]
+autotranscode = ["src/autotranscode", "*/autotranscode/src/autotranscode"]
+tests = ["tests", "*/autotranscode/tests"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
