@@ -1,21 +1,9 @@
-# .
+# autotranscode
 
-[![PyPI - Version](https://img.shields.io/pypi/v/-.svg)](https://pypi.org/project/-)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/-.svg)](https://pypi.org/project/-)
+Automatically transcode video (and audio) files in a directory. This is my automated fix to DaVinci Resolve only supporting a very specific set of video formats with the free version on Linux.
 
------
-
-## Table of Contents
-
-- [Installation](#installation)
-- [License](#license)
-
-## Installation
-
-```console
-pip install -
-```
+This is a Python script that watches a folder for file changes. Once it sees a new (or changed) media file, it starts transcoding it, using the previously supplied ffmpeg settings.
 
 ## License
 
-`-` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+`autotranscode` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
