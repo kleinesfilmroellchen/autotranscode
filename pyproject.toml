@@ -33,6 +33,9 @@ extra-dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/autotranscode tests}"
 
+[tool.hatch.envs.default]
+path = ".hatch"
+
 [tool.coverage.run]
 source_pkgs = ["autotranscode", "tests"]
 branch = true
