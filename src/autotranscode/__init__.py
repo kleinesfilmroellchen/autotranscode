@@ -7,7 +7,6 @@ from pathlib import Path
 import time
 
 from watchdog.events import (
-    FileSystemEvent,
     FileSystemEventHandler,
     FileCreatedEvent,
     FileClosedEvent,
@@ -21,10 +20,10 @@ from .ffmpeg import FFmpegHandler
 from concurrent.futures import ThreadPoolExecutor
 
 
-def thread_event_loop() -> asyncio.EventLoop:
+def thread_event_loop() -> asyncio.AbstractEventLoop:
     try:
         return asyncio.get_event_loop()
-    except:
+    except Exception:
         return asyncio.new_event_loop()
 
 
@@ -86,7 +85,7 @@ def handle_transcoding(path: Path, ffmpeg_handler: FFmpegHandler):
     observer = Observer()
     observer.schedule(
         event_handler,
-        path,
+        str(path),
         recursive=True,
         event_filter=[
             FileCreatedEvent,

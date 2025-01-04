@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2025-present kleines Filmröllchen <kleines@filmroellchen.eu>
 #
 # SPDX-License-Identifier: MIT
-import asyncio
 import click
 
 from autotranscode.__about__ import __version__
@@ -71,8 +70,4 @@ def autotranscode(
     handler = FFmpegHandler(
         video_codec, audio_codec, container, suffix, list(input_args), list(output_args)
     )
-    # asyncio.run(
-    #     handler.transcode("/mnt/edit/sources/Community Showcase October 2022/C0591.MP4")
-    # )
     handle_transcoding(directory, handler)
-    # asyncio.run(handler.build_ffmpeg_invocation("pyproject.toml", "test.mkv"))
